@@ -12,6 +12,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
@@ -35,7 +36,7 @@ class UserForm
                         TextEntry::make('generate_password')
                             ->label("Password"),
                         Action::make('resetPassword')
-                            ->label("Generate Password")
+                            ->label(fn($operation) => $operation == 'edit' ? "Set New Password" : "Generate Password")
                             ->action(function ($set) {
                                 $set('password', Str::password(16));
                             }),
@@ -50,7 +51,29 @@ class UserForm
                     ]),
                 Checkbox::make('send_user_notification')
                 ->inline()
-                ->label(" Send the new user an email about their account"),
+                ->label(" Send the new user an email about their account")
+                ->visible(fn($operation) => $operation == 'create'),
+                 Group::make()
+                    ->schema([
+                        TextEntry::make('send_reset_link')
+                            ->label("Password Reset"),
+                        Action::make('resetLinkPassword')
+                            ->label("Send Reset Link")
+                             ->action(function ($set, $record) {
+                                $data = $record->toArray();
+                                $remember_token = base64_encode(Str::random(5) . "###" . $data['email']);
+                                $content = "Name: {$data['name']}\n\n";
+                                $content .= "To set your password, visit the following address:\n\n";
+                                $content .= url('/change-password') . "?key={$remember_token}";
+
+                                Mail::raw($content, function ($message) use ($data) {
+                                    $message->to($data['email'])
+                                        ->subject('Your Login Details');
+                                });
+                                $data['remember_token'] = $remember_token;
+                            }),
+                    ])
+                     ->visible(fn($record, $operation) => $operation == 'edit' && auth()->user()->id != $record->id),
                 // ->suffixAction(
                 //     Action::make('generate')
                 //         ->label('Generate password')
