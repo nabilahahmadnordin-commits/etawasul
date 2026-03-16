@@ -1,5 +1,6 @@
 <?php
 
+use App\Filament\Pages\ChangePassword;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
