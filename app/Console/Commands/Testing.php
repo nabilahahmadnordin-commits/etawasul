@@ -28,7 +28,7 @@ class Testing extends Command
     {
         //
         Mail::raw('Hello! This is a raw simple email from Laravel.', function ($message) {
-            $message->to('luqman.anordin@lppsa.gov.my')
+            $message->to('nabilahahmad.nordin@student.iium.edu.my')
                 ->subject('Test Raw Email');
         });
     }
