@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -14,11 +15,27 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         //
-        User::create([
+        $user = User::create([
             'name' => 'ela',
             'email' => 'ela@test.com',
             'password' => 'ela1234',
         ]);
+        $user->assignRole(Role::where('name', 'admin')->first());
 
+
+         $user = User::create([
+            'name' => 'student ela',
+            'email' => 'ela@test.com',
+            'password' => 'ela1234',
+        ]);
+        $user->assignRole(Role::where('name', 'student')->first());
+
+
+         $user = User::create([
+            'name' => 'kin ela',
+            'email' => 'ela@test.com',
+            'password' => 'ela1234',
+        ]);
+        $user->assignRole(Role::where('name', 'kin')->first());
     }
 }
