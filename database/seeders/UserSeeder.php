@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
 
          $user = User::create([
             'name' => 'student ela',
-            'email' => 'ela@test.com',
+            'email' => 'ela2@test.com',
             'password' => 'ela1234',
         ]);
         $user->assignRole(Role::where('name', 'student')->first());
@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
 
          $user = User::create([
             'name' => 'kin ela',
-            'email' => 'ela@test.com',
+            'email' => 'ela3@test.com',
             'password' => 'ela1234',
         ]);
         $user->assignRole(Role::where('name', 'kin')->first());
